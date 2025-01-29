@@ -68,7 +68,7 @@ class Delivery {
 private:
     vector<pair<string, int>> deliveries;  // Список доставок (пара - товар и количество)
 
-public
+public:
 
     void addDelivery(const string& name, int quantity) {
         deliveries.push_back(make_pair(name, quantity));
