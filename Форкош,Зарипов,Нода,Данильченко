@@ -73,7 +73,7 @@ public
     void addDelivery(const string& name, int quantity) {
         deliveries.push_back(make_pair(name, quantity));
         cout << "Доставка товара '" << name << "' на склад: " << quantity << " единиц." << endl;
-      {
+      }
     void removeDelivery(const string& name, int quantity) {
         for (auto it = deliveries.begin(); it != deliveries.end(); ++it) {
             if (it->first == name) {
