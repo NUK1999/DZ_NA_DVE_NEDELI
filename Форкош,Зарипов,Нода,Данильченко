@@ -1,0 +1,182 @@
+#include <iostream>
+#include <vector>
+#include <string>
+
+using namespace std;
+
+// Класс для представления товара
+class Product {
+public:
+    string name;
+    int quantity;
+    double price;
+
+    // Конструктор
+    Product(string n, int q, double p) : name(n), quantity(q), price(p) {}
+
+    // Метод для отображения информации о товаре
+    void display() const {
+        cout << "Товар: " << name << ", Количество: " << quantity << ", Цена: " << price << " руб." << endl;
+    }
+};
+
+// Класс для склада
+class Warehouse {
+private:
+    vector<Product> products;  // Список товаров на складе
+
+public:
+    // Просмотр содержимого склада
+    void viewProducts() const {
+        if (products.empty()) {
+            cout << "Склад пуст." << endl;
+        } else {
+            cout << "Содержимое склада:" << endl;
+            for (const auto& product : products) {
+                product.display();
+            }
+        }
+    }
+
+    // Добавление товара на склад
+    void addProduct(const string& name, int quantity, double price) {
+        // Проверка, если товар уже есть на складе
+        for (auto& product : products) {
+            if (product.name == name) {
+                product.quantity += quantity;
+                cout << "Товар '" << name << "' обновлен. Новое количество: " << product.quantity << endl;
+                return;
+            }
+        }
+        // Если товара нет на складе, добавляем новый
+        products.push_back(Product(name, quantity, price));
+        cout << "Товар '" << name << "' добавлен на склад." << endl;
+    }
+
+    // Удаление товара со склада
+    void removeProduct(const string& name, int quantity) {
+        for (auto it = products.begin(); it != products.end(); ++it) {
+            if (it->name == name) {
+                if (it->quantity >= quantity) {
+                    it->quantity -= quantity;
+                    cout << "Товар '" << name << "' удален. Новое количество: " << it->quantity << endl;
+                    if (it->quantity == 0) {
+                        products.erase(it);
+                        cout << "Товар '" << name << "' полностью удален со склада." << endl;
+                    }
+                    return;
+                } else {
+                    cout << "Недостаточно товара '" << name << "' на складе. Доступно: " << it->quantity << endl;
+                    return;
+                }
+            }
+        }
+        cout << "Товар '" << name << "' не найден на складе." << endl;
+    }
+};
+
+// Класс для доставки товаров
+class Delivery {
+private:
+    vector<pair<string, int>> deliveries;  // Список доставок (пара - товар и количество)
+
+public:
+    // Добавление доставки
+    void addDelivery(const string& name, int quantity) {
+        deliveries.push_back(make_pair(name, quantity));
+        cout << "Доставка товара '" << name << "' на склад: " << quantity << " единиц." << endl;
+    }
+
+    // Удаление доставки
+    void removeDelivery(const string& name, int quantity) {
+        for (auto it = deliveries.begin(); it != deliveries.end(); ++it) {
+            if (it->first == name) {
+                if (it->second >= quantity) {
+                    it->second -= quantity;
+                    cout << "Доставка товара '" << name << "' удалена. Убрано " << quantity << " единиц." << endl;
+                    if (it->second == 0) {
+                        deliveries.erase(it);
+                        cout << "Доставка товара '" << name << "' полностью удалена." << endl;
+                    }
+                    return;
+                } else {
+                    cout << "Недостаточно товара для удаления. Доступно в доставке: " << it->second << endl;
+                    return;
+                }
+            }
+        }
+        cout << "Доставка товара '" << name << "' не найдена." << endl;
+    }
+};
+
+// Главная функция с интерфейсом пользователя
+int main() {
+    Warehouse warehouse;
+    Delivery delivery;
+
+    int choice;
+
+    do {
+        cout << "\nМеню:\n";
+        cout << "1. Просмотр содержимого на складе\n";
+        cout << "2. Добавить товар на склад\n";
+        cout << "3. Удалить товар со склада\n";
+        cout << "4. Добавить доставку товаров\n";
+        cout << "5. Удалить доставку товаров\n";
+        cout << "6. Выход\n";
+        cout << "Выберите опцию: ";
+        cin >> choice;
+
+        string name;
+        int quantity;
+        double price;
+
+        switch (choice) {
+            case 1:
+                warehouse.viewProducts();
+                break;
+            case 2:
+                cout << "Введите название товара: ";
+                cin.ignore();  // Для игнорирования предыдущего символа новой строки
+                getline(cin, name);
+                cout << "Введите количество товара: ";
+                cin >> quantity;
+                cout << "Введите цену товара: ";
+                cin >> price;
+                warehouse.addProduct(name, quantity, price);
+                break;
+            case 3:
+                cout << "Введите название товара для удаления: ";
+                cin.ignore();
+                getline(cin, name);
+                cout << "Введите количество для удаления: ";
+                cin >> quantity;
+                warehouse.removeProduct(name, quantity);
+                break;
+            case 4:
+                cout << "Введите название товара для доставки: ";
+                cin.ignore();
+                getline(cin, name);
+                cout << "Введите количество товара для доставки: ";
+                cin >> quantity;
+                delivery.addDelivery(name, quantity);
+                break;
+            case 5:
+                cout << "Введите название товара для удаления из доставки: ";
+                cin.ignore();
+                getline(cin, name);
+                cout << "Введите количество для удаления из доставки: ";
+                cin >> quantity;
+                delivery.removeDelivery(name, quantity);
+                break;
+            case 6:
+                cout << "Выход из программы.\n";
+                break;
+            default:
+                cout << "Неверный выбор, попробуйте снова.\n";
+                break;
+        }
+    } while (choice != 6);
+
+    return 0;
+}
