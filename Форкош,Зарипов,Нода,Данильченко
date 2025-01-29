@@ -4,29 +4,24 @@
 
 using namespace std;
 
-// Класс для представления товара
 class Product {
 public:
     string name;
     int quantity;
     double price;
 
-    // Конструктор
     Product(string n, int q, double p) : name(n), quantity(q), price(p) {}
 
-    // Метод для отображения информации о товаре
     void display() const {
         cout << "Товар: " << name << ", Количество: " << quantity << ", Цена: " << price << " руб." << endl;
     }
 };
 
-// Класс для склада
 class Warehouse {
 private:
-    vector<Product> products;  // Список товаров на складе
+    vector<Product> products;  
 
 public:
-    // Просмотр содержимого склада
     void viewProducts() const {
         if (products.empty()) {
             cout << "Склад пуст." << endl;
@@ -38,9 +33,7 @@ public:
         }
     }
 
-    // Добавление товара на склад
     void addProduct(const string& name, int quantity, double price) {
-        // Проверка, если товар уже есть на складе
         for (auto& product : products) {
             if (product.name == name) {
                 product.quantity += quantity;
@@ -48,12 +41,9 @@ public:
                 return;
             }
         }
-        // Если товара нет на складе, добавляем новый
         products.push_back(Product(name, quantity, price));
         cout << "Товар '" << name << "' добавлен на склад." << endl;
     }
-
-    // Удаление товара со склада
     void removeProduct(const string& name, int quantity) {
         for (auto it = products.begin(); it != products.end(); ++it) {
             if (it->name == name) {
@@ -74,20 +64,16 @@ public:
         cout << "Товар '" << name << "' не найден на складе." << endl;
     }
 };
-
-// Класс для доставки товаров
 class Delivery {
 private:
     vector<pair<string, int>> deliveries;  // Список доставок (пара - товар и количество)
 
-public:
-    // Добавление доставки
+public
+
     void addDelivery(const string& name, int quantity) {
         deliveries.push_back(make_pair(name, quantity));
         cout << "Доставка товара '" << name << "' на склад: " << quantity << " единиц." << endl;
-    }
-
-    // Удаление доставки
+      {
     void removeDelivery(const string& name, int quantity) {
         for (auto it = deliveries.begin(); it != deliveries.end(); ++it) {
             if (it->first == name) {
@@ -109,7 +95,6 @@ public:
     }
 };
 
-// Главная функция с интерфейсом пользователя
 int main() {
     Warehouse warehouse;
     Delivery delivery;
